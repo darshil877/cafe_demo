@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crème & Co. — Artisan Café</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5ede0;
+    --warm: #f0dcc0;
+    --mocha: #3d2314;
+    --espresso: #2a1609;
+    --caramel: #c4843f;
+    --caramel-light: #e6a95a;
+    --rose: #d4789a;
+    --sage: #7a9b7a;
+    --text: #2a1609;
+    --muted: #8b6e5a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Josefin Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.2rem 5%;
+    background: rgba(245,237,224,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(196,132,63,0.2);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--mocha); letter-spacing: 1px; }
+  .logo span { color: var(--caramel); font-style: italic; }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--caramel); }
+  .nav-cart { position: relative; background: var(--mocha); color: var(--cream); padding: 0.6rem 1.5rem; border-radius: 50px; font-size: 0.82rem; cursor: pointer; border: none; letter-spacing: 1px; transition: all 0.3s; }
+  .nav-cart:hover { background: var(--caramel); transform: translateY(-2px); }
+  .cart-badge { position: absolute; top: -6px; right: -6px; background: var(--rose); color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+
+  /* HERO */
+  .hero {
+    height: 100vh; display: flex; align-items: center;
+    padding: 0 5%; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #f5ede0 0%, #f0dcc0 50%, #e8ccaa 100%);
+  }
+  .hero-blob {
+    position: absolute; border-radius: 50%; filter: blur(80px);
+    animation: blobFloat 8s ease-in-out infinite;
+  }
+  .hero-blob.b1 { width: 500px; height: 500px; background: rgba(196,132,63,0.15); top: -100px; right: -100px; }
+  .hero-blob.b2 { width: 400px; height: 400px; background: rgba(212,120,154,0.1); bottom: -50px; left: 30%; animation-delay: 3s; }
+  .hero-blob.b3 { width: 300px; height: 300px; background: rgba(122,155,122,0.08); top: 30%; right: 20%; animation-delay: 5s; }
+  .hero-content { position: relative; z-index: 1; max-width: 600px; }
+  .hero-eyebrow { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 1.5rem; animation: fadeUp 0.8s ease both; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3.5rem, 7vw, 6rem); line-height: 1; font-weight: 900; color: var(--mocha); animation: fadeUp 0.8s 0.1s ease both; }
+  .hero h1 em { color: var(--caramel); font-style: italic; display: block; }
+  .hero-desc { margin: 1.5rem 0 2.5rem; color: var(--muted); line-height: 1.9; font-size: 0.95rem; max-width: 440px; animation: fadeUp 0.8s 0.2s ease both; }
+  .hero-btns { display: flex; gap: 1rem; animation: fadeUp 0.8s 0.3s ease both; }
+  .btn-dark { background: var(--mocha); color: var(--cream); padding: 1rem 2.2rem; border-radius: 50px; border: none; font-family: 'Josefin Sans', sans-serif; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+  .btn-dark:hover { background: var(--caramel); transform: translateY(-3px); box-shadow: 0 15px 35px rgba(61,35,20,0.2); }
+  .btn-ghost { background: transparent; color: var(--mocha); padding: 1rem 2.2rem; border-radius: 50px; border: 2px solid var(--mocha); font-family: 'Josefin Sans', sans-serif; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+  .btn-ghost:hover { background: var(--mocha); color: var(--cream); }
+  .hero-float-cards { position: absolute; right: 5%; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 1rem; z-index: 1; }
+  .float-card {
+    background: white; border-radius: 20px; padding: 1.2rem 1.5rem;
+    box-shadow: 0 20px 60px rgba(61,35,20,0.12);
+    display: flex; align-items: center; gap: 1rem;
+    animation: floatCard 4s ease-in-out infinite;
+  }
+  .float-card:nth-child(2) { animation-delay: 2s; margin-left: 30px; }
+  .float-card:nth-child(3) { animation-delay: 1s; }
+  .float-emoji { font-size: 2rem; }
+  .float-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .float-val { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--mocha); font-weight: 700; }
+
+  /* MARQUEE */
+  .marquee-section { background: var(--mocha); padding: 1rem 0; overflow: hidden; }
+  .marquee-track { display: flex; gap: 3rem; animation: marquee 20s linear infinite; white-space: nowrap; }
+  .marquee-item { color: var(--caramel); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; display: flex; align-items: center; gap: 1rem; }
+  .marquee-dot { width: 6px; height: 6px; background: var(--caramel); border-radius: 50%; display: inline-block; }
+
+  /* SECTION BASE */
+  section { padding: 7rem 5%; }
+  .section-tag { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 1rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.1; color: var(--mocha); }
+  .section-title em { color: var(--caramel); font-style: italic; }
+
+  /* MENU */
+  #menu { background: var(--warm); }
+  .menu-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+  .menu-filters { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .filter-btn {
+    background: white; border: 1px solid rgba(196,132,63,0.2);
+    color: var(--muted); padding: 0.5rem 1.2rem; border-radius: 50px;
+    font-family: 'Josefin Sans', sans-serif; font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .filter-btn.active, .filter-btn:hover { background: var(--mocha); color: var(--cream); border-color: var(--mocha); }
+  .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .menu-card {
+    background: white; border-radius: 24px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(61,35,20,0.06);
+    transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    cursor: pointer;
+  }
+  .menu-card:hover { transform: translateY(-10px); box-shadow: 0 25px 60px rgba(61,35,20,0.15); }
+  .menu-img {
+    height: 180px; display: flex; align-items: center; justify-content: center;
+    font-size: 5rem; position: relative; overflow: hidden;
+  }
+  .menu-img-overlay { position: absolute; inset: 0; opacity: 0; background: rgba(61,35,20,0.5); display: flex; align-items: center; justify-content: center; transition: opacity 0.3s; }
+  .menu-card:hover .menu-img-overlay { opacity: 1; }
+  .add-overlay-btn { background: white; color: var(--mocha); border: none; padding: 0.6rem 1.4rem; border-radius: 50px; font-family: 'Josefin Sans', sans-serif; font-size: 0.8rem; letter-spacing: 1px; cursor: pointer; font-weight: 600; }
+  .menu-body { padding: 1.2rem; }
+  .menu-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--mocha); margin-bottom: 0.3rem; }
+  .menu-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+  .menu-footer { display: flex; justify-content: space-between; align-items: center; }
+  .menu-price { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--caramel); font-weight: 700; }
+  .menu-badge { font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 50px; }
+  .badge-bestseller { background: rgba(212,120,154,0.15); color: var(--rose); }
+  .badge-new { background: rgba(122,155,122,0.15); color: var(--sage); }
+  .badge-vegan { background: rgba(122,155,122,0.15); color: var(--sage); }
+  .add-btn { background: var(--mocha); color: var(--cream); border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+  .add-btn:hover { background: var(--caramel); transform: rotate(90deg) scale(1.1); }
+
+  /* BG COLORS FOR MENU ITEMS */
+  .bg-rose { background: linear-gradient(135deg, #fce4ec, #f8bbd0); }
+  .bg-caramel { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
+  .bg-sage { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+  .bg-lavender { background: linear-gradient(135deg, #f3e5f5, #e1bee7); }
+  .bg-sky { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+  .bg-warm { background: linear-gradient(135deg, #fdf3e7, #f5e0c4); }
+
+  /* DELIVERY */
+  #delivery { background: var(--mocha); color: var(--cream); }
+  #delivery .section-title { color: var(--cream); }
+  #delivery .section-title em { color: var(--caramel-light); }
+  .delivery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 3rem; }
+  .delivery-form { }
+  .delivery-steps { display: flex; flex-direction: column; gap: 1.5rem; }
+  .step { display: flex; gap: 1rem; align-items: flex-start; }
+  .step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--caramel); color: var(--mocha); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .step-text h4 { color: var(--caramel-light); font-size: 0.9rem; letter-spacing: 1px; margin-bottom: 0.3rem; }
+  .step-text p { color: rgba(245,237,224,0.6); font-size: 0.85rem; line-height: 1.6; }
+  .del-form-group { margin-bottom: 1rem; }
+  .del-form-group label { display: block; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,237,224,0.5); margin-bottom: 0.5rem; }
+  .del-form-group input, .del-form-group select, .del-form-group textarea {
+    width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(196,132,63,0.3);
+    border-radius: 12px; padding: 0.8rem 1rem; color: var(--cream);
+    font-family: 'Josefin Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.3s;
+  }
+  .del-form-group input:focus, .del-form-group select:focus { border-color: var(--caramel); }
+  .del-form-group select option { background: var(--mocha); }
+  .del-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .cart-summary { background: rgba(255,255,255,0.05); border: 1px solid rgba(196,132,63,0.2); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(196,132,63,0.1); font-size: 0.85rem; }
+  .cart-item:last-child { border: none; }
+  .cart-total { display: flex; justify-content: space-between; margin-top: 0.5rem; font-weight: 600; color: var(--caramel-light); }
+  .place-order-btn { width: 100%; background: var(--caramel); color: var(--mocha); border: none; padding: 1rem; border-radius: 50px; font-family: 'Josefin Sans', sans-serif; font-size: 0.9rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+  .place-order-btn:hover { background: var(--caramel-light); transform: translateY(-3px); box-shadow: 0 15px 40px rgba(196,132,63,0.3); }
+
+  /* SPECIALS */
+  #specials { }
+  .specials-row { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 3rem; }
+  .special-large, .special-small {
+    border-radius: 24px; overflow: hidden; position: relative; cursor: pointer;
+    transition: transform 0.4s ease;
+  }
+  .special-large:hover, .special-small:hover { transform: scale(1.02); }
+  .special-large { height: 400px; background: linear-gradient(135deg, #3d2314, #6b3a1f); display: flex; align-items: flex-end; padding: 2.5rem; }
+  .special-small { height: 190px; background: linear-gradient(135deg, #f5ede0, #e8ccaa); display: flex; align-items: flex-end; padding: 1.5rem; }
+  .special-content h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--cream); line-height: 1.2; }
+  .special-content p { color: rgba(245,237,224,0.7); font-size: 0.85rem; margin-top: 0.5rem; }
+  .special-content.dark h3 { color: var(--mocha); }
+  .special-content.dark p { color: var(--muted); }
+  .special-tag { display: inline-block; background: var(--caramel); color: var(--mocha); padding: 4px 12px; border-radius: 50px; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem; }
+  .special-emoji { font-size: 5rem; position: absolute; top: 1.5rem; right: 1.5rem; animation: float 4s ease-in-out infinite; }
+  .specials-small-col { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  /* GALLERY / AMBIENCE */
+  #ambience { background: var(--warm); }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
+  .gallery-cell {
+    border-radius: 16px; overflow: hidden; position: relative;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .gallery-cell:hover { transform: scale(1.03); z-index: 2; }
+  .gallery-cell.tall { grid-row: span 2; }
+  .gallery-img { width: 100%; height: 100%; min-height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+
+  /* TESTIMONIALS */
+  #testimonials { }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .testimonial-card { background: var(--warm); border-radius: 20px; padding: 2rem; }
+  .stars { color: var(--caramel); font-size: 1rem; letter-spacing: 2px; margin-bottom: 1rem; }
+  .testimonial-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1rem; color: var(--mocha); line-height: 1.7; margin-bottom: 1.5rem; }
+  .testimonial-author { display: flex; align-items: center; gap: 0.8rem; }
+  .author-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--caramel); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .author-name { font-size: 0.85rem; font-weight: 600; color: var(--mocha); }
+  .author-since { font-size: 0.75rem; color: var(--muted); }
+
+  /* FOOTER */
+  footer { background: var(--espresso); color: var(--cream); padding: 4rem 5% 2rem; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--caramel); margin-bottom: 1rem; }
+  .footer-desc { color: rgba(245,237,224,0.5); font-size: 0.85rem; line-height: 1.8; }
+  .footer-heading { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--caramel); margin-bottom: 1.2rem; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-links a { color: rgba(245,237,224,0.5); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+  .footer-links a:hover { color: var(--caramel); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; display: flex; justify-content: space-between; color: rgba(245,237,224,0.3); font-size: 0.8rem; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 2000; background: var(--mocha); color: var(--cream); padding: 1rem 1.5rem; border-radius: 12px; font-size: 0.9rem; display: none; border-left: 4px solid var(--caramel); animation: slideIn 0.4s ease; }
+
+  /* CART SIDEBAR */
+  .cart-sidebar { position: fixed; right: -420px; top: 0; bottom: 0; width: 400px; background: var(--cream); z-index: 200; padding: 2rem; box-shadow: -20px 0 60px rgba(61,35,20,0.15); transition: right 0.4s cubic-bezier(0.16,1,0.3,1); overflow-y: auto; }
+  .cart-sidebar.open { right: 0; }
+  .cart-sidebar-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--mocha); margin-bottom: 1.5rem; }
+  .cart-list { }
+  .cart-list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid rgba(196,132,63,0.15); }
+  .cli-name { font-size: 0.9rem; color: var(--mocha); }
+  .cli-price { font-family: 'Playfair Display', serif; color: var(--caramel); }
+  .cli-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.2rem; }
+  .cart-sidebar-total { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--mocha); margin-top: 1.5rem; display: flex; justify-content: space-between; }
+  .cart-empty { text-align: center; color: var(--muted); padding: 3rem 0; font-size: 0.9rem; }
+  .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 199; display: none; }
+  .cart-overlay.open { display: block; }
+
+  /* KEYFRAMES */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes blobFloat { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-20px) scale(1.05); } 66% { transform: translate(-20px,10px) scale(0.95); } }
+  @keyframes floatCard { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  @media (max-width: 900px) {
+    .hero-float-cards { display: none; }
+    .delivery-grid { grid-template-columns: 1fr; }
+    .specials-row { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .cart-sidebar { width: 100%; right: -100%; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .menu-grid { grid-template-columns: 1fr; }
+    .specials-small-col { display: none; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Crème <span>&</span> Co.</div>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#specials">Specials</a></li>
+    <li><a href="#delivery">Delivery</a></li>
+    <li><a href="#ambience">Our Story</a></li>
+  </ul>
+  <button class="nav-cart" onclick="toggleCart()">
+    🛒 Cart
+    <span class="cart-badge" id="cartBadge">0</span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <div class="hero-blob b3"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">✦ Artisan Café & Patisserie ✦</div>
+    <h1>Where Every<br><em>Bite Tells</em><br>a Story</h1>
+    <p class="hero-desc">Handcrafted pastries, specialty coffee and wholesome dishes made with love in the heart of Mumbai.</p>
+    <div class="hero-btns">
+      <button class="btn-dark" onclick="document.getElementById('menu').scrollIntoView()">Explore Menu →</button>
+      <button class="btn-ghost" onclick="document.getElementById('delivery').scrollIntoView()">Order Delivery</button>
+    </div>
+  </div>
+  <div class="hero-float-cards">
+    <div class="float-card">
+      <div class="float-emoji">🥐</div>
+      <div><div class="float-label">Today's Special</div><div class="float-val">Almond Croissant</div></div>
+    </div>
+    <div class="float-card">
+      <div class="float-emoji">⭐</div>
+      <div><div class="float-label">Rating</div><div class="float-val">4.9 / 5.0</div></div>
+    </div>
+    <div class="float-card">
+      <div class="float-emoji">🚴</div>
+      <div><div class="float-label">Delivery</div><div class="float-val">30–40 min</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="menu-header">
+    <div>
+      <div class="section-tag">Our Menu</div>
+      <div class="section-title">Crafted with <em>Passion</em></div>
+    </div>
+  </div>
+  <div class="menu-filters" id="menuFilters"></div>
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<!-- SPECIALS -->
+<section id="specials">
+  <div class="section-tag">Limited Time</div>
+  <div class="section-title">This Month's <em>Specials</em></div>
+  <div class="specials-row">
+    <div class="special-large">
+      <div class="special-emoji">🎂</div>
+      <div class="special-content">
+        <div class="special-tag">Chef's Pick</div>
+        <h3>Triple Chocolate<br>Celebration Cake</h3>
+        <p>Belgian dark, milk & white chocolate layers — ₹1,800 per whole cake</p>
+      </div>
+    </div>
+    <div class="specials-small-col">
+      <div class="special-small">
+        <div style="position:absolute;top:1rem;right:1rem;font-size:2.5rem">🫖</div>
+        <div class="special-content dark">
+          <div class="special-tag" style="background:var(--sage);color:white">Seasonal</div>
+          <h3 style="font-size:1.2rem">Rose Cardamom<br>Tea Set</h3>
+        </div>
+      </div>
+      <div class="special-small" style="background: linear-gradient(135deg, #fce4ec, #f8bbd0)">
+        <div style="position:absolute;top:1rem;right:1rem;font-size:2.5rem">🍓</div>
+        <div class="special-content dark">
+          <div class="special-tag" style="background:var(--rose);color:white">New</div>
+          <h3 style="font-size:1.2rem">Strawberry<br>Pavlova</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section id="delivery">
+  <div class="section-tag">Home Delivery</div>
+  <div class="section-title">Delivered <em>Fresh</em><br>to Your Door</div>
+  <div class="delivery-grid">
+    <div>
+      <div class="delivery-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><h4>Browse & Add</h4><p>Explore our full menu and add your favorites to the cart</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><h4>Enter Details</h4><p>Provide your address and preferred delivery time</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><h4>We Prepare</h4><p>Our chefs freshly prepare your order in our kitchen</p></div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><h4>Enjoy!</h4><p>Your order arrives warm and fresh in 30–40 minutes</p></div>
+        </div>
+      </div>
+      <div style="margin-top:2.5rem;padding:1.5rem;background:rgba(255,255,255,0.05);border-radius:16px;border:1px solid rgba(196,132,63,0.2)">
+        <div style="font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--caramel-light);margin-bottom:1rem">Delivery Areas</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem">
+          <span style="background:rgba(196,132,63,0.15);color:var(--caramel-light);padding:4px 12px;border-radius:50px;font-size:0.78rem">Bandra</span>
+          <span style="background:rgba(196,132,63,0.15);color:var(--caramel-light);padding:4px 12px;border-radius:50px;font-size:0.78rem">Juhu</span>
+          <span style="background:rgba(196,132,63,0.15);color:var(--caramel-light);padding:4px 12px;border-radius:50px;font-size:0.78rem">Andheri</span>
+          <span style="background:rgba(196,132,63,0.15);color:var(--caramel-light);padding:4px 12px;border-radius:50px;font-size:0.78rem">Powai</span>
+          <span style="background:rgba(196,132,63,0.15);color:var(--caramel-light);padding:4px 12px;border-radius:50px;font-size:0.78rem">Versova</span>
+          <span style="background:rgba(196,132,63,0.15);color:var(--caramel-light);padding:4px 12px;border-radius:50px;font-size:0.78rem">Santacruz</span>
+        </div>
+      </div>
+    </div>
+    <div class="delivery-form">
+      <div class="cart-summary" id="deliveryCart">
+        <div style="font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--caramel-light);margin-bottom:1rem">Your Order</div>
+        <div id="deliveryCartItems"><div style="color:rgba(245,237,224,0.4);font-size:0.85rem;text-align:center;padding:1rem">Your cart is empty</div></div>
+        <div class="cart-total" id="deliveryTotal" style="display:none"><span>Total</span><span id="deliveryTotalAmt">₹0</span></div>
+      </div>
+      <div class="del-form-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="Priya Sharma">
+      </div>
+      <div class="del-form-row">
+        <div class="del-form-group">
+          <label>Phone</label>
+          <input type="tel" placeholder="+91 98765 43210">
+        </div>
+        <div class="del-form-group">
+          <label>Delivery Time</label>
+          <select>
+            <option>ASAP (30–40 min)</option>
+            <option>In 1 hour</option>
+            <option>In 2 hours</option>
+            <option>Schedule for later</option>
+          </select>
+        </div>
+      </div>
+      <div class="del-form-group">
+        <label>Delivery Address</label>
+        <input type="text" placeholder="Flat 4B, Sunrise Apartments, Bandra West...">
+      </div>
+      <div class="del-form-group">
+        <label>Special Instructions</label>
+        <textarea style="resize:vertical;min-height:80px" placeholder="Allergies, preferences..."></textarea>
+      </div>
+      <button class="place-order-btn" onclick="placeOrder()">Place Order →</button>
+    </div>
+  </div>
+</section>
+
+<!-- AMBIENCE / GALLERY -->
+<section id="ambience">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;flex-wrap:wrap;gap:1rem">
+    <div>
+      <div class="section-tag">Our Story</div>
+      <div class="section-title">A Corner of<br><em>Pure Delight</em></div>
+    </div>
+    <p style="max-width:350px;color:var(--muted);font-size:0.9rem;line-height:1.8">Founded in 2018, Crème & Co. started as a one-table bakery in Bandra. Today we serve thousands of happy customers while staying true to our artisan roots.</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-cell tall"><div class="gallery-img" style="background:linear-gradient(135deg,#f5e0c4,#e8c89a);height:100%">☕</div></div>
+    <div class="gallery-cell"><div class="gallery-img bg-rose">🧁</div></div>
+    <div class="gallery-cell"><div class="gallery-img bg-sage">🥗</div></div>
+    <div class="gallery-cell"><div class="gallery-img bg-caramel">🥐</div></div>
+    <div class="gallery-cell"><div class="gallery-img bg-lavender">🍰</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" style="background:var(--warm)">
+  <div class="section-tag">What People Say</div>
+  <div class="section-title">Stories of <em>Joy</em></div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"The croissants here are absolutely divine — flaky, buttery, perfect. I've tried bakeries across Paris and this is equally brilliant."</div>
+      <div class="testimonial-author"><div class="author-avatar">🙋</div><div><div class="author-name">Meera Joshi</div><div class="author-since">Regular since 2020</div></div></div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"The home delivery is exceptional — everything arrives perfectly packaged and still warm. Their chocolate truffle cake is something else entirely."</div>
+      <div class="testimonial-author"><div class="author-avatar">👨</div><div><div class="author-name">Rahul Verma</div><div class="author-since">Regular since 2021</div></div></div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"Crème & Co. has spoiled every other café for me. The vegan options are just as indulgent as everything else. Truly exceptional quality."</div>
+      <div class="testimonial-author"><div class="author-avatar">🙋‍♀️</div><div><div class="author-name">Aisha Khan</div><div class="author-since">Regular since 2019</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Crème & Co.</div>
+      <div class="footer-desc">Artisan café and patisserie crafting moments of joy since 2018. Located in the heart of Bandra, Mumbai.</div>
+    </div>
+    <div>
+      <div class="footer-heading">Menu</div>
+      <ul class="footer-links">
+        <li><a href="#">Coffee & Tea</a></li>
+        <li><a href="#">Pastries</a></li>
+        <li><a href="#">Cakes</a></li>
+        <li><a href="#">Mains</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Visit Us</div>
+      <ul class="footer-links">
+        <li><a href="#">14 Linking Road, Bandra</a></li>
+        <li><a href="#">Mon–Fri: 8am–9pm</a></li>
+        <li><a href="#">Sat–Sun: 9am–10pm</a></li>
+        <li><a href="#">+91 98765 00001</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Follow</div>
+      <ul class="footer-links">
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">Pinterest</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Crème & Co. — All rights reserved.</span>
+    <span>Made with ♥ in Mumbai</span>
+  </div>
+</footer>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+    <div class="cart-sidebar-title">Your Cart</div>
+    <button onclick="toggleCart()" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted)">×</button>
+  </div>
+  <div class="cart-list" id="cartList"></div>
+  <div class="cart-sidebar-total" id="cartTotal" style="display:none"><span>Total</span><span id="cartTotalAmt">₹0</span></div>
+  <button class="btn-dark" style="width:100%;margin-top:1.5rem;text-align:center;padding:1rem;letter-spacing:2px" onclick="checkoutCart()">Checkout →</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const menuData = [
+  { id:1, name:'Espresso', cat:'Coffee', desc:'Rich single-origin Brazilian espresso with notes of dark chocolate.', price:180, emoji:'☕', bg:'bg-caramel', badge:'bestseller' },
+  { id:2, name:'Matcha Latte', cat:'Coffee', desc:'Ceremonial grade matcha with oat milk, lightly sweetened.', price:260, emoji:'🍵', bg:'bg-sage', badge:'new' },
+  { id:3, name:'Almond Croissant', cat:'Pastries', desc:'Flaky butter croissant filled with almond cream and topped with flaked almonds.', price:220, emoji:'🥐', bg:'bg-warm', badge:'bestseller' },
+  { id:4, name:'Strawberry Tart', cat:'Cakes', desc:'Crisp pastry shell with vanilla custard and fresh strawberries.', price:320, emoji:'🍓', bg:'bg-rose', badge:'new' },
+  { id:5, name:'Avocado Toast', cat:'Mains', desc:'Sourdough topped with smashed avocado, cherry tomatoes and microgreens.', price:380, emoji:'🥑', bg:'bg-sage', badge:'vegan' },
+  { id:6, name:'Truffle Mushroom Pasta', cat:'Mains', desc:'Fettuccine with truffle oil, wild mushrooms and parmesan.', price:520, emoji:'🍝', bg:'bg-lavender', badge:'' },
+  { id:7, name:'Red Velvet Slice', cat:'Cakes', desc:'Moist red velvet layered with cream cheese frosting.', price:280, emoji:'🎂', bg:'bg-rose', badge:'bestseller' },
+  { id:8, name:'Blueberry Muffin', cat:'Pastries', desc:'Freshly baked with wild blueberries and a crunchy sugar topping.', price:160, emoji:'🫐', bg:'bg-sky', badge:'' },
+  { id:9, name:'Cold Brew Float', cat:'Coffee', desc:'12-hour cold brew with vanilla ice cream.', price:300, emoji:'🧊', bg:'bg-sky', badge:'new' },
+  { id:10, name:'Belgian Waffle', cat:'Pastries', desc:'Crisp outside, fluffy inside, with Chantilly cream and maple syrup.', price:340, emoji:'🧇', bg:'bg-warm', badge:'bestseller' },
+  { id:11, name:'Chicken Pesto Sandwich', cat:'Mains', desc:'Grilled chicken breast with basil pesto on sourdough.', price:420, emoji:'🥪', bg:'bg-sage', badge:'' },
+  { id:12, name:'Lemon Cheesecake', cat:'Cakes', desc:'New York style baked cheesecake with fresh lemon curd.', price:350, emoji:'🍋', bg:'bg-caramel', badge:'' },
+];
+
+const categories = ['All', 'Coffee', 'Pastries', 'Cakes', 'Mains'];
+let activeFilter = 'All';
+let cart = [];
+
+function renderMenuFilters() {
+  const el = document.getElementById('menuFilters');
+  el.innerHTML = categories.map(c => `<button class="filter-btn ${c===activeFilter?'active':''}" onclick="setFilter('${c}')">${c}</button>`).join('');
+}
+
+function setFilter(c) { activeFilter = c; renderMenuFilters(); renderMenu(); }
+
+function renderMenu() {
+  const filtered = activeFilter === 'All' ? menuData : menuData.filter(m => m.cat === activeFilter);
+  const grid = document.getElementById('menuGrid');
+  grid.innerHTML = filtered.map(item => `
+    <div class="menu-card">
+      <div class="menu-img ${item.bg}">
+        ${item.emoji}
+        <div class="menu-img-overlay"><button class="add-overlay-btn" onclick="addToCart(${item.id})">+ Add to Cart</button></div>
+      </div>
+      <div class="menu-body">
+        <div class="menu-name">${item.name}</div>
+        <div class="menu-desc">${item.desc}</div>
+        <div class="menu-footer">
+          <div class="menu-price">₹${item.price}</div>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            ${item.badge ? `<span class="menu-badge badge-${item.badge}">${item.badge}</span>` : ''}
+            <button class="add-btn" onclick="addToCart(${item.id})">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(id) {
+  const item = menuData.find(m => m.id === id);
+  const existing = cart.find(c => c.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ ...item, qty: 1 });
+  updateCartUI();
+  showToast(`✓ ${item.name} added to cart`);
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(c => c.id !== id);
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  document.getElementById('cartBadge').textContent = count;
+
+  // Sidebar
+  const list = document.getElementById('cartList');
+  if (cart.length === 0) {
+    list.innerHTML = '<div class="cart-empty">Your cart is empty 🧁</div>';
+    document.getElementById('cartTotal').style.display = 'none';
+  } else {
+    list.innerHTML = cart.map(c => `
+      <div class="cart-list-item">
+        <div><div class="cli-name">${c.emoji} ${c.name} × ${c.qty}</div></div>
+        <div style="display:flex;align-items:center;gap:0.8rem">
+          <div class="cli-price">₹${c.price * c.qty}</div>
+          <button class="cli-remove" onclick="removeFromCart(${c.id})">×</button>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('cartTotal').style.display = 'flex';
+    document.getElementById('cartTotalAmt').textContent = `₹${total}`;
+  }
+
+  // Delivery section cart
+  const dcItems = document.getElementById('deliveryCartItems');
+  const dcTotal = document.getElementById('deliveryTotal');
+  if (cart.length === 0) {
+    dcItems.innerHTML = '<div style="color:rgba(245,237,224,0.4);font-size:0.85rem;text-align:center;padding:1rem">Your cart is empty</div>';
+    dcTotal.style.display = 'none';
+  } else {
+    dcItems.innerHTML = cart.map(c => `
+      <div class="cart-item"><span>${c.emoji} ${c.name} × ${c.qty}</span><span style="color:var(--caramel-light)">₹${c.price * c.qty}</span></div>
+    `).join('');
+    dcTotal.style.display = 'flex';
+    document.getElementById('deliveryTotalAmt').textContent = `₹${total + 50}`;
+  }
+}
+
+function toggleCart() {
+  document.getElementById('cartSidebar').classList.toggle('open');
+  document.getElementById('cartOverlay').classList.toggle('open');
+}
+
+function checkoutCart() {
+  if (cart.length === 0) { showToast('Add items to your cart first!'); return; }
+  document.getElementById('delivery').scrollIntoView({ behavior: 'smooth' });
+  toggleCart();
+}
+
+function placeOrder() {
+  if (cart.length === 0) { showToast('⚠️ Add items to your cart first!'); return; }
+  cart = [];
+  updateCartUI();
+  showToast('🎉 Order placed! Arriving in 30–40 minutes.');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+// Marquee
+const marqueeItems = ['Artisan Coffee', 'Fresh Pastries', 'Homemade Cakes', 'Farm-to-Table', 'Free Delivery ₹500+', 'Vegan Options', 'Open 7 Days', 'Bandra · Mumbai'];
+const track = document.getElementById('marqueeTrack');
+const doubled = [...marqueeItems, ...marqueeItems, ...marqueeItems];
+track.innerHTML = doubled.map(i => `<span class="marquee-item"><span class="marquee-dot"></span>${i}</span>`).join('');
+
+// Init
+renderMenuFilters();
+renderMenu();
+updateCartUI();
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.menu-card, .testimonial-card, .step').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
